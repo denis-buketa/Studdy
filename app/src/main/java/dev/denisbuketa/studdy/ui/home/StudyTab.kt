@@ -2,7 +2,7 @@
 
 package dev.denisbuketa.studdy.ui.home
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -10,7 +10,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,8 +18,12 @@ import dev.denisbuketa.studdy.alarm.ExactAlarms
 import dev.denisbuketa.studdy.ui.composables.AlarmInput
 import java.util.*
 
+@SuppressLint("InlinedApi")
 @Composable
-fun StudyTab(exactAlarms: ExactAlarms) {
+fun StudyTab(
+    exactAlarms: ExactAlarms,
+    onSchedulingAlarmNotAllowed: () -> Unit
+) {
 
     val alarm by remember { exactAlarms.exactAlarmState }
 
@@ -53,10 +56,14 @@ fun StudyTab(exactAlarms: ExactAlarms) {
                         modifier = Modifier.align(Alignment.CenterVertically),
                         onClick = {
                             Log.d("debug_log", "onClick set")
-
                             if (inputIsValid(hourInput, minuteInput)) {
                                 showInputInvalidMessage = false
-                                setAlarm(exactAlarms, hourInput.toInt(), minuteInput.toInt())
+                                setAlarm(
+                                    exactAlarms,
+                                    hourInput.toInt(),
+                                    minuteInput.toInt(),
+                                    onSchedulingAlarmNotAllowed
+                                )
                             } else {
                                 showInputInvalidMessage = true
                             }
@@ -89,8 +96,19 @@ fun StudyTab(exactAlarms: ExactAlarms) {
     }
 }
 
-private fun setAlarm(exactAlarms: ExactAlarms, hour: Int, minute: Int) {
-    debugLog("setAlarm() - hour: $hour, minute: $minute")
+private fun setAlarm(
+    exactAlarms: ExactAlarms,
+    hour: Int,
+    minute: Int,
+    onSchedulingAlarmNotAllowed: () -> Unit
+) {
+    debugLog("setAlarm() called - hour: $hour, minute: $minute")
+
+    if (exactAlarms.canScheduleExactAlarms().not()) {
+        debugLog("scheduling not allowed")
+        onSchedulingAlarmNotAllowed.invoke()
+        return
+    }
 
     val calendar = Calendar.getInstance()
 
@@ -107,7 +125,7 @@ private fun setAlarm(exactAlarms: ExactAlarms, hour: Int, minute: Int) {
     debugLog("alarmTimeMillis - $alarmTimeMillis")
     printMillisToTime(alarmTimeMillis)
 
-    exactAlarms.setExactAlarmSetExact(proposedTimeMillis)
+    exactAlarms.setExactAlarm(proposedTimeMillis)
 
     debugLog("Alarm Set")
 }
@@ -115,10 +133,10 @@ private fun setAlarm(exactAlarms: ExactAlarms, hour: Int, minute: Int) {
 @Preview(showBackground = true)
 @Composable
 fun StudyTabPreview() {
-    StudyTab(
-        ExactAlarms(
-            LocalContext.current,
-            LocalContext.current.getSharedPreferences("Preview", Context.MODE_PRIVATE)
-        )
-    )
+//    StudyTab(
+//        ExactAlarms(
+//            LocalContext.current,
+//            LocalContext.current.getSharedPreferences("Preview", Context.MODE_PRIVATE)
+//        )
+//    )
 }

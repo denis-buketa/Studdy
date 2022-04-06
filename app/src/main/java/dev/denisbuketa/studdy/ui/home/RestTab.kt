@@ -15,31 +15,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.denisbuketa.studdy.*
-import dev.denisbuketa.studdy.alarm.setInexactAlarmSet
-import dev.denisbuketa.studdy.alarm.setInexactAlarmWindow
+import dev.denisbuketa.studdy.alarm.InexactAlarms
 import dev.denisbuketa.studdy.ui.composables.AlarmInput
 import dev.denisbuketa.studdy.ui.composables.AlarmWithIntervalInput
 import java.util.*
 
 @Composable
-fun RestTab() {
+fun RestTab(inexactAlarms: InexactAlarms) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 8.dp)
         ) {
-            MinimalTime()
+            MinimalTime(inexactAlarms)
             Spacer(modifier = Modifier.height(16.dp))
-            WindowTime()
+            WindowTime(inexactAlarms)
             Spacer(modifier = Modifier.height(16.dp))
-            RepeatingTime()
+            RepeatingTime(inexactAlarms)
         }
     }
 }
 
 @Composable
-private fun MinimalTime() {
+private fun MinimalTime(inexactAlarms: InexactAlarms) {
     Text(
         text = "Set Rest Alarm",
         modifier = Modifier
@@ -68,7 +67,7 @@ private fun MinimalTime() {
 
                 if (inputIsValid(hourInput, minuteInput)) {
                     showInputInvalidMessage = false
-                    setAlarm(context, hourInput.toInt(), minuteInput.toInt())
+                    setAlarm(inexactAlarms, hourInput.toInt(), minuteInput.toInt())
                 } else {
                     showInputInvalidMessage = true
                 }
@@ -79,7 +78,7 @@ private fun MinimalTime() {
 }
 
 @Composable
-private fun WindowTime() {
+private fun WindowTime(inexactAlarms: InexactAlarms) {
     Text(
         text = "Set Rest Window",
         modifier = Modifier
@@ -113,7 +112,7 @@ private fun WindowTime() {
 
                 if (inputIsValid(hourInput, minuteInput, windowInput)) {
                     showInputInvalidMessage = false
-                    setAlarm(context, hourInput.toInt(), minuteInput.toInt())
+                    setAlarm(inexactAlarms, hourInput.toInt(), minuteInput.toInt())
                 } else {
                     showInputInvalidMessage = true
                 }
@@ -124,7 +123,7 @@ private fun WindowTime() {
 }
 
 @Composable
-private fun RepeatingTime() {
+private fun RepeatingTime(inexactAlarms: InexactAlarms) {
     Text(
         text = "Set Repeating Rest Alarm",
         modifier = Modifier
@@ -158,7 +157,7 @@ private fun RepeatingTime() {
 
                 if (inputIsValid(hourInput, minuteInput, intervalInput)) {
                     showInputInvalidMessage = false
-                    setAlarm(context, hourInput.toInt(), minuteInput.toInt())
+                    setAlarm(inexactAlarms, hourInput.toInt(), minuteInput.toInt())
                 } else {
                     showInputInvalidMessage = true
                 }
@@ -168,7 +167,7 @@ private fun RepeatingTime() {
     }
 }
 
-private fun setAlarm(context: Context, hour: Int, minute: Int) {
+private fun setAlarm(inexactAlarms: InexactAlarms, hour: Int, minute: Int) {
     debugLog("setAlarm() - hour: $hour, minute: $minute")
 
     val calendar = Calendar.getInstance()
@@ -186,12 +185,12 @@ private fun setAlarm(context: Context, hour: Int, minute: Int) {
     debugLog("alarmTimeMillis - $alarmTimeMillis")
     printMillisToTime(alarmTimeMillis)
 
-    setInexactAlarmSet(context, proposedTimeMillis)
+    inexactAlarms.setInexactAlarmSet(proposedTimeMillis)
 
     debugLog("Alarm Set")
 }
 
-private fun setAlarmWindow(context: Context, hour: Int, minute: Int, minuteWindow: Int) {
+private fun setAlarmWindow(inexactAlarms: InexactAlarms, hour: Int, minute: Int, minuteWindow: Int) {
     debugLog("setAlarmWindow() - hour: $hour, minute: $minute, minuteWindow: $minute")
 
     val calendar = Calendar.getInstance()
@@ -211,7 +210,7 @@ private fun setAlarmWindow(context: Context, hour: Int, minute: Int, minuteWindo
 
     val windowLengthMillis: Long = minuteToMillis(minute)
 
-    setInexactAlarmWindow(context, proposedTimeMillis, windowLengthMillis)
+    inexactAlarms.setInexactAlarmWindow(proposedTimeMillis, windowLengthMillis)
 
     debugLog("Alarm Window Set")
 }
@@ -219,5 +218,4 @@ private fun setAlarmWindow(context: Context, hour: Int, minute: Int, minuteWindo
 @Preview(showBackground = true)
 @Composable
 fun RestTabPreview() {
-    RestTab()
 }

@@ -2,12 +2,10 @@
 
 package dev.denisbuketa.studdy.ui.home
 
-import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -18,10 +16,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dev.denisbuketa.studdy.alarm.ExactAlarms
+import dev.denisbuketa.studdy.alarm.InexactAlarms
 import dev.denisbuketa.studdy.navigation.BottomNavItem
 
 @Composable
-fun HomeScreen(exactAlarms: ExactAlarms) {
+fun HomeScreen(
+    exactAlarms: ExactAlarms,
+    inexactAlarms: InexactAlarms,
+    onSchedulingAlarmNotAllowed: () -> Unit
+) {
     val navController = rememberNavController()
     Scaffold(
         topBar = { HomeScreenTopBar() },
@@ -29,10 +32,10 @@ fun HomeScreen(exactAlarms: ExactAlarms) {
     ) {
         NavHost(navController, startDestination = BottomNavItem.Study.screenRoute) {
             composable(BottomNavItem.Study.screenRoute) {
-                StudyTab(exactAlarms)
+                StudyTab(exactAlarms, onSchedulingAlarmNotAllowed)
             }
             composable(BottomNavItem.Rest.screenRoute) {
-                RestTab()
+                RestTab(inexactAlarms)
             }
         }
     }
@@ -79,10 +82,10 @@ private fun HomeScreenBottomNavigation(navController: NavController) {
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(
-        ExactAlarms(
-            LocalContext.current,
-            LocalContext.current.getSharedPreferences("test", Context.MODE_PRIVATE)
-        )
-    )
+//    HomeScreen(
+//        ExactAlarms(
+//            LocalContext.current,
+//            LocalContext.current.getSharedPreferences("test", Context.MODE_PRIVATE)
+//        )
+//    )
 }
