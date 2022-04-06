@@ -1,6 +1,7 @@
 package dev.denisbuketa.studdy
 
 import android.util.Log
+import java.text.DecimalFormat
 import java.util.*
 
 fun debugLog(value: String) {
@@ -18,11 +19,12 @@ fun printMillisToTime(millis: Long) {
 }
 
 fun millisToHourAndMinute(millis: Long): String {
+    val decimalFormat = DecimalFormat("00")
     val calendar = Calendar.getInstance()
     calendar.timeInMillis = millis
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
-    return "$hour:$minute"
+    return "${decimalFormat.format(hour)}:${decimalFormat.format(minute)}"
 }
 
 fun Calendar.setHourAndMinute(hour: Int, minute: Int) {
@@ -33,6 +35,8 @@ fun Calendar.setHourAndMinute(hour: Int, minute: Int) {
 }
 
 fun minuteToMillis(minute: Int): Long = minute * 60 * 1000L
+
+fun currentTimeMillis(): Long = Calendar.getInstance().timeInMillis
 
 fun inputIsValid(hourInput: String, minuteInput: String): Boolean {
     val hour = hourInput.toIntOrNull()

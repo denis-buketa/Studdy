@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import dev.denisbuketa.studdy.StuddyApplication
+import dev.denisbuketa.studdy.currentTimeMillis
 import dev.denisbuketa.studdy.debugLog
 
 const val EXACT_ALARM_KEY = "exact_alarm"
@@ -29,7 +30,11 @@ class ExactAlarms(
     fun ensureAlarmSet() {
         debugLog("ensureAlarmSet called()")
         val alarm: Long = sharedPreferences.getLong(EXACT_ALARM_KEY, -1L)
-        if (alarm != -1L && canScheduleExactAlarms()) {
+
+        if (alarm != -1L
+            && canScheduleExactAlarms()
+            && alarm > currentTimeMillis()
+        ) {
             setExactAlarm(alarm)
         } else {
             clearExactAlarm()
