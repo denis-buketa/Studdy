@@ -14,8 +14,8 @@ fun printMillisToTime(millis: Long) {
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
     val seconds = calendar.get(Calendar.SECOND)
-    val milliss = calendar.get(Calendar.MILLISECOND)
-    debugLog("$hour:$minute:$seconds:$milliss (hour:minute:seconds:millis)")
+    val millis = calendar.get(Calendar.MILLISECOND)
+    debugLog("$hour:$minute:$seconds:$millis (hour:minute:seconds:millis)")
 }
 
 fun millisToHourAndMinute(millis: Long): String {
@@ -25,6 +25,19 @@ fun millisToHourAndMinute(millis: Long): String {
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
     return "${decimalFormat.format(hour)}:${decimalFormat.format(minute)}"
+}
+
+fun alarmWithIntervalToHourAndMinute(millis: Long, intervalMillis: Long): String {
+    val decimalFormat = DecimalFormat("00")
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = millis
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
+
+    val intervalMinute: Int = (intervalMillis / 1000 / 60).toInt()
+
+    return "${decimalFormat.format(hour)}:${decimalFormat.format(minute)} " +
+            "+ ${decimalFormat.format(intervalMinute)}"
 }
 
 fun Calendar.setHourAndMinute(hour: Int, minute: Int) {
@@ -61,6 +74,19 @@ fun inputIsValid(hourInput: String, minuteInput: String, minuteWindowInput: Stri
 
     val minuteWindow = minuteWindowInput.toIntOrNull()
     val isValidMinuteWindow = minuteWindow != null && minuteWindow >= 10 && minuteWindow <= 60
+
+    return isValidHour && isValidMinute && isValidMinuteWindow
+}
+
+fun inputIsValid2(hourInput: String, minuteInput: String, minuteWindowInput: String): Boolean {
+    val hour = hourInput.toIntOrNull()
+    val isValidHour = hour != null && hour >= 0 && hour <= 23
+
+    val minute = minuteInput.toIntOrNull()
+    val isValidMinute = minute != null && minute >= 0 && minute <= 59
+
+    val minuteWindow = minuteWindowInput.toIntOrNull()
+    val isValidMinuteWindow = minuteWindow != null && minuteWindow > 0
 
     return isValidHour && isValidMinute && isValidMinuteWindow
 }

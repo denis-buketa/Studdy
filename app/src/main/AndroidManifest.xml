@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".alarm.AlarmBroadcastReceiver" />
+        <receiver android:name=".alarm.ExactAlarmBroadcastReceiver" />
+        <receiver android:name=".alarm.InexactAlarmBroadcastReceiver" />
 
         <receiver
             android:name=".alarm.ResetAlarmsBroadcastReceiver"

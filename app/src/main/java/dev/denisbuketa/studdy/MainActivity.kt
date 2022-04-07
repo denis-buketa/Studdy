@@ -19,7 +19,9 @@ class MainActivity : ComponentActivity() {
         val exactAlarms = (application as StuddyApplication).exactAlarms.apply {
             ensureAlarmSet()
         }
-        val inexactAlarms = (application as StuddyApplication).inexactAlarms
+        val inexactAlarms = (application as StuddyApplication).inexactAlarms.apply {
+            ensureAlarmSet()
+        }
         setContent {
             StuddyTheme {
                 Surface(

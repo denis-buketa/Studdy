@@ -50,7 +50,6 @@ class ExactAlarms(
 
     fun clearExactAlarm() {
         debugLog("clearExactAlarm() called")
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = createExactAlarmIntent()
 
         alarmManager.cancel(pendingIntent)
@@ -91,7 +90,7 @@ class ExactAlarms(
     }
 
     private fun createExactAlarmIntent(): PendingIntent {
-        val intent = Intent(context, AlarmBroadcastReceiver::class.java)
+        val intent = Intent(context, ExactAlarmBroadcastReceiver::class.java)
         return PendingIntent.getBroadcast(
             context,
             EXACT_ALARM_REQUEST_CODE,
@@ -101,11 +100,11 @@ class ExactAlarms(
     }
 }
 
-class AlarmBroadcastReceiver : BroadcastReceiver() {
+class ExactAlarmBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Toast.makeText(context, "Alarm", Toast.LENGTH_SHORT).show()
-        debugLog("AlarmBroadcastReceiver onReceive() called")
+        Toast.makeText(context, "Exact Alarm Triggered", Toast.LENGTH_SHORT).show()
+        debugLog("ExactAlarmBroadcastReceiver onReceive() called")
         (context.applicationContext as StuddyApplication).exactAlarms.clearExactAlarm()
     }
 }
