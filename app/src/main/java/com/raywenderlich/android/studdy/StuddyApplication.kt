@@ -44,6 +44,9 @@ import com.raywenderlich.android.studdy.alarm.InexactAlarmsImpl
 
 const val SHARED_PREFS = "alarms"
 
+/**
+ * Application class responsible for dependency injection and holding app wide state.
+ */
 class StuddyApplication : Application() {
 
   val alarmRingtoneState: MutableState<Ringtone?> = mutableStateOf(null)

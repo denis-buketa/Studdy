@@ -38,7 +38,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.raywenderlich.android.studdy.StuddyApplication
-import com.raywenderlich.android.studdy.debugLog
 
 private const val NOTIFICATION_ID = 1002
 private const val NOTIFICATION_CHANNEL_ID = "rest_alarm"
@@ -47,8 +46,6 @@ private const val NOTIFICATION_CHANNEL_NAME = "Rest Alarms"
 class InexactAlarmBroadcastReceiver : BroadcastReceiver() {
 
   override fun onReceive(context: Context, intent: Intent) {
-    debugLog("InexactAlarmBroadcastReceiver onReceive() called")
-
     showNotification(
         context,
         NOTIFICATION_CHANNEL_ID,

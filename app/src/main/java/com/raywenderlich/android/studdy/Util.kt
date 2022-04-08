@@ -34,9 +34,12 @@
 
 package com.raywenderlich.android.studdy
 
-import android.util.Log
 import java.text.DecimalFormat
 import java.util.*
+
+/*
+ * Contains useful util methods that makes the code more readable.
+ */
 
 fun String.isValidHour(): Boolean = this.toIntOrNull().let {
   it != null && it >= 0 && it <= 23
@@ -87,10 +90,6 @@ fun toUserFriendlyText(millis: Long, intervalMillis: Long): String {
 
   return "${decimalFormat.format(hour)}:${decimalFormat.format(minute)} " +
       "(${decimalFormat.format(intervalMinute)})"
-}
-
-fun debugLog(value: String) {
-  Log.d("debug_log", value)
 }
 
 fun currentTimeMillis(): Long = Calendar.getInstance().timeInMillis

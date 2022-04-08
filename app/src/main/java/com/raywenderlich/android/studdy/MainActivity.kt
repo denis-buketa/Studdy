@@ -47,6 +47,9 @@ import com.raywenderlich.android.R
 import com.raywenderlich.android.studdy.ui.home.HomeScreen
 import com.raywenderlich.android.studdy.ui.theme.StuddyTheme
 
+/**
+ * Main activity that holds the UI and servers as a starting activity.
+ */
 class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {

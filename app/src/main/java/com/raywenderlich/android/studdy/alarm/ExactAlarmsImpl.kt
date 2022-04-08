@@ -42,7 +42,6 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import com.raywenderlich.android.studdy.debugLog
 
 const val EXACT_ALARM_INTENT_REQUEST_CODE = 1001
 
@@ -57,8 +56,6 @@ class ExactAlarmsImpl(
   override fun getExactAlarmState(): State<ExactAlarm> = exactAlarmState
 
   override fun rescheduleAlarm() {
-    debugLog("ExactAlarms rescheduleAlarm called()")
-
     val alarm: ExactAlarm = sharedPreferences.getExactAlarm()
     if (alarm.isSet() && alarm.isNotInPast() && canScheduleExactAlarms()) {
       scheduleExactAlarm(alarm)
@@ -68,16 +65,12 @@ class ExactAlarmsImpl(
   }
 
   override fun scheduleExactAlarm(exactAlarm: ExactAlarm) {
-    debugLog("ExactAlarms scheduleExactAlarm() called")
-
     setExactAlarmSetAlarmClock(exactAlarm.triggerAtMillis)
     sharedPreferences.putExactAlarm(exactAlarm)
     exactAlarmState.value = exactAlarm
   }
 
   override fun clearExactAlarm() {
-    debugLog("ExactAlarms clearExactAlarm() called")
-
     val pendingIntent = createExactAlarmIntent()
 
     alarmManager.cancel(pendingIntent)

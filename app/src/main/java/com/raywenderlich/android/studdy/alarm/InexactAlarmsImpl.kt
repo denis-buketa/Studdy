@@ -41,7 +41,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import com.raywenderlich.android.studdy.debugLog
 
 const val INEXACT_ALARM_REQUEST_CODE = 1002
 const val INEXACT_ALARM_WINDOW_REQUEST_CODE = 1003
@@ -66,8 +65,6 @@ class InexactAlarmsImpl(
   override fun getRepeatingAlarmState(): State<RepeatingAlarm> = repeatingAlarmState
 
   override fun rescheduleAlarms() {
-    debugLog("InexactAlarms rescheduleAlarm called()")
-
     val inexactAlarm = sharedPreferences.getInexactAlarm()
     if (inexactAlarm.isSet() && inexactAlarm.isNotInPast()) {
       scheduleInexactAlarm(inexactAlarm)
@@ -91,8 +88,6 @@ class InexactAlarmsImpl(
   }
 
   override fun scheduleInexactAlarm(inexactAlarm: ExactAlarm) {
-    debugLog("InexactAlarms scheduleInexactAlarm() called")
-
     val pendingIntent = createInexactAlarmIntent(INEXACT_ALARM_REQUEST_CODE)
     alarmManager.set(AlarmManager.RTC_WAKEUP, inexactAlarm.triggerAtMillis, pendingIntent)
     sharedPreferences.putInexactAlarm(inexactAlarm)
@@ -100,8 +95,6 @@ class InexactAlarmsImpl(
   }
 
   override fun clearInexactAlarm() {
-    debugLog("InexactAlarms clearInexactAlarm() called")
-
     val pendingIntent = createInexactAlarmIntent(INEXACT_ALARM_REQUEST_CODE)
     alarmManager.cancel(pendingIntent)
     sharedPreferences.clearInexactAlarm()
@@ -109,8 +102,6 @@ class InexactAlarmsImpl(
   }
 
   override fun scheduleWindowAlarm(windowAlarm: WindowAlarm) {
-    debugLog("InexactAlarms scheduleWindowAlarm called")
-
     val pendingIntent = createInexactAlarmIntent(INEXACT_ALARM_WINDOW_REQUEST_CODE)
     alarmManager.setWindow(
         AlarmManager.RTC_WAKEUP,
@@ -123,8 +114,6 @@ class InexactAlarmsImpl(
   }
 
   override fun clearWindowAlarm() {
-    debugLog("InexactAlarms clearWindowAlarm called")
-
     val pendingIntent = createInexactAlarmIntent(INEXACT_ALARM_WINDOW_REQUEST_CODE)
     alarmManager.cancel(pendingIntent)
     sharedPreferences.clearWindowAlarm()
@@ -132,8 +121,6 @@ class InexactAlarmsImpl(
   }
 
   override fun scheduleRepeatingAlarm(repeatingAlarm: RepeatingAlarm) {
-    debugLog("InexactAlarms scheduleRepeatingAlarm called")
-
     val pendingIntent = createInexactAlarmIntent(INEXACT_REPEATING_ALARM_REQUEST_CODE)
     alarmManager.setInexactRepeating(
         AlarmManager.RTC_WAKEUP,
@@ -146,8 +133,6 @@ class InexactAlarmsImpl(
   }
 
   override fun clearRepeatingAlarm() {
-    debugLog("InexactAlarms clearRepeatingAlarm called")
-
     val pendingIntent = createInexactAlarmIntent(INEXACT_REPEATING_ALARM_REQUEST_CODE)
     alarmManager.cancel(pendingIntent)
     sharedPreferences.clearRepeatingAlarm()

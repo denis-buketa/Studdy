@@ -37,7 +37,6 @@ package com.raywenderlich.android.studdy.alarm
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 
-
 interface InexactAlarms {
 
   fun getInexactAlarmState(): State<ExactAlarm>

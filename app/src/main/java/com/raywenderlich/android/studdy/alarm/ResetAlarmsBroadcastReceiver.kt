@@ -38,13 +38,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.raywenderlich.android.studdy.StuddyApplication
-import com.raywenderlich.android.studdy.debugLog
 
 class ResetAlarmsBroadcastReceiver : BroadcastReceiver() {
 
   override fun onReceive(context: Context, intent: Intent) {
-    debugLog("ResetAlarmsBroadcastReceiver onReceive() called")
-
     val action = intent.action
     if (action != null) {
       if (action == Intent.ACTION_BOOT_COMPLETED) {
