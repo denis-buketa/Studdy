@@ -1,123 +1,30 @@
 package dev.denisbuketa.studdy.alarm
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
-import android.os.Build
-import android.widget.Toast
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import dev.denisbuketa.studdy.StuddyApplication
-import dev.denisbuketa.studdy.currentTimeMillis
-import dev.denisbuketa.studdy.debugLog
 
-const val EXACT_ALARM_KEY = "exact_alarm"
-const val EXACT_ALARM_REQUEST_CODE = 1001
+interface ExactAlarms {
 
-class ExactAlarms(
-    private val context: Context,
-    private val sharedPreferences: SharedPreferences
-) {
+  fun getExactAlarmState(): State<ExactAlarm>
 
-    var exactAlarmState: MutableState<Long> = mutableStateOf(-1L)
+  fun rescheduleAlarm()
 
-    private val alarmManager: AlarmManager =
-        context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+  fun scheduleExactAlarm(exactAlarm: ExactAlarm)
 
-    fun ensureAlarmSet() {
-        debugLog("ensureAlarmSet called()")
-        val alarm: Long = sharedPreferences.getLong(EXACT_ALARM_KEY, -1L)
+  fun clearExactAlarm()
 
-        if (alarm != -1L
-            && canScheduleExactAlarms()
-            && alarm > currentTimeMillis()
-        ) {
-            setExactAlarm(alarm)
-        } else {
-            clearExactAlarm()
-        }
-    }
-
-    fun setExactAlarm(triggerAtMillis: Long) {
-        debugLog("setExactAlarm() called")
-        setExactAlarmSetAlarmClock(triggerAtMillis)
-        sharedPreferences.edit().putLong(EXACT_ALARM_KEY, triggerAtMillis).apply()
-        exactAlarmState.value = triggerAtMillis
-    }
-
-    fun clearExactAlarm() {
-        debugLog("clearExactAlarm() called")
-        val pendingIntent = createExactAlarmIntent()
-
-        alarmManager.cancel(pendingIntent)
-        sharedPreferences.edit().putLong(EXACT_ALARM_KEY, -1L).apply()
-        exactAlarmState.value = -1L
-    }
-
-    fun canScheduleExactAlarms(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            alarmManager.canScheduleExactAlarms()
-        } else {
-            true
-        }
-    }
-
-    private fun setExactAlarmSetExact(triggerAtMillis: Long) {
-        val pendingIntent = createExactAlarmIntent()
-        alarmManager.setExact(
-            AlarmManager.RTC_WAKEUP,
-            triggerAtMillis,
-            pendingIntent
-        )
-    }
-
-    private fun setExactAlarmSetExactAndAllowWhileIdle(triggerAtMillis: Long) {
-        val pendingIntent = createExactAlarmIntent()
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            triggerAtMillis,
-            pendingIntent
-        )
-    }
-
-    private fun setExactAlarmSetAlarmClock(triggerAtMillis: Long) {
-        val pendingIntent = createExactAlarmIntent()
-        val alarmClockInfo = AlarmManager.AlarmClockInfo(triggerAtMillis, pendingIntent)
-        alarmManager.setAlarmClock(alarmClockInfo, pendingIntent)
-    }
-
-    private fun createExactAlarmIntent(): PendingIntent {
-        val intent = Intent(context, ExactAlarmBroadcastReceiver::class.java)
-        return PendingIntent.getBroadcast(
-            context,
-            EXACT_ALARM_REQUEST_CODE,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-    }
+  fun canScheduleExactAlarms(): Boolean
 }
 
-class ExactAlarmBroadcastReceiver : BroadcastReceiver() {
+object PreviewExactAlarms : ExactAlarms {
 
-    override fun onReceive(context: Context, intent: Intent) {
-        Toast.makeText(context, "Exact Alarm Triggered", Toast.LENGTH_SHORT).show()
-        debugLog("ExactAlarmBroadcastReceiver onReceive() called")
-        (context.applicationContext as StuddyApplication).exactAlarms.clearExactAlarm()
-    }
-}
+  override fun getExactAlarmState(): State<ExactAlarm> = mutableStateOf(ExactAlarm.NOT_SET)
 
-class ResetAlarmsBroadcastReceiver : BroadcastReceiver() {
+  override fun rescheduleAlarm() {}
 
-    override fun onReceive(context: Context, intent: Intent) {
-        debugLog("ResetAlarmsBroadcastReceiver onReceive() called")
-        val action = intent.action
-        if (action != null) {
-            if (action == Intent.ACTION_BOOT_COMPLETED) {
-                (context.applicationContext as StuddyApplication).exactAlarms.ensureAlarmSet()
-            }
-        }
-    }
+  override fun scheduleExactAlarm(exactAlarm: ExactAlarm) {}
+
+  override fun clearExactAlarm() {}
+
+  override fun canScheduleExactAlarms(): Boolean = true
 }

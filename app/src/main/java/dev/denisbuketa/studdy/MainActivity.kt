@@ -14,28 +14,28 @@ import dev.denisbuketa.studdy.ui.theme.StuddyTheme
 
 class MainActivity : ComponentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val exactAlarms = (application as StuddyApplication).exactAlarms.apply {
-            ensureAlarmSet()
-        }
-        val inexactAlarms = (application as StuddyApplication).inexactAlarms.apply {
-            ensureAlarmSet()
-        }
-        setContent {
-            StuddyTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    HomeScreen(exactAlarms, inexactAlarms) { openSettings() }
-                }
-            }
-        }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    val exactAlarms = (application as StuddyApplication).exactAlarms.apply {
+      rescheduleAlarm()
     }
+    val inexactAlarms = (application as StuddyApplication).inexactAlarms.apply {
+      rescheduleAlarms()
+    }
+    setContent {
+      StuddyTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize()
+        ) {
+          HomeScreen(exactAlarms, inexactAlarms) { openSettings() }
+        }
+      }
+    }
+  }
 
-    private fun openSettings() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-        }
+  private fun openSettings() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
     }
+  }
 }
