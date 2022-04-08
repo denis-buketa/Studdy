@@ -49,7 +49,7 @@ fun RestTab(inexactAlarms: InexactAlarms) {
 
         if (windowAlarm.isSet()) {
           Text(
-              text = "Inexact alarm window set: ${
+              text = "Window alarm set: ${
                 toUserFriendlyText(windowAlarm.triggerAtMillis, windowAlarm.windowLengthMillis)
               }",
               modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
@@ -58,7 +58,7 @@ fun RestTab(inexactAlarms: InexactAlarms) {
 
         if (repeatingAlarm.isSet()) {
           Text(
-              text = "Inexact repeating alarm set: ${
+              text = "Repeating alarm set: ${
                 toUserFriendlyText(
                     repeatingAlarm.triggerAtMillis,
                     repeatingAlarm.intervalMillis
@@ -121,7 +121,7 @@ private fun WindowAlarmInput(
     windowAlarm: WindowAlarm
 ) {
   Text(
-      text = "Set Rest Window",
+      text = "Set Rest Window (min 10m)",
       modifier = Modifier
           .fillMaxWidth()
           .padding(top = 8.dp),
