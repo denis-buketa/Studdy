@@ -37,16 +37,28 @@ package com.raywenderlich.android.studdy.alarm
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 import com.raywenderlich.android.studdy.StuddyApplication
 import com.raywenderlich.android.studdy.debugLog
+
+private const val NOTIFICATION_ID = 1001
+private const val NOTIFICATION_CHANNEL_ID = "study_alarm"
+private const val NOTIFICATION_CHANNEL_NAME = "Study Alarms"
 
 class ExactAlarmBroadcastReceiver : BroadcastReceiver() {
 
   override fun onReceive(context: Context, intent: Intent) {
     debugLog("ExactAlarmBroadcastReceiver onReceive() called")
 
-    Toast.makeText(context, "Exact Alarm Triggered", Toast.LENGTH_SHORT).show()
-    (context.applicationContext as StuddyApplication).exactAlarms.clearExactAlarm()
+    showNotification(
+        context,
+        NOTIFICATION_CHANNEL_ID,
+        NOTIFICATION_CHANNEL_NAME,
+        NOTIFICATION_ID,
+        "Time to study!"
+    )
+    (context.applicationContext as StuddyApplication).apply {
+      exactAlarms.clearExactAlarm()
+      alarmRingtoneState.value = playRingtone(context)
+    }
   }
 }

@@ -32,55 +32,19 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.studdy
+package com.raywenderlich.android.studdy.alarm
 
-import android.content.Intent
-import android.os.Build
-import android.os.Bundle
-import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Surface
-import androidx.compose.ui.Modifier
-import com.raywenderlich.android.R
-import com.raywenderlich.android.studdy.ui.home.HomeScreen
-import com.raywenderlich.android.studdy.ui.theme.StuddyTheme
+import android.content.Context
+import android.media.Ringtone
+import android.media.RingtoneManager
+import android.net.Uri
 
-class MainActivity : ComponentActivity() {
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    setTheme(R.style.Theme_Studdy)
-    super.onCreate(savedInstanceState)
-    val exactAlarms = (application as StuddyApplication).exactAlarms.apply {
-      rescheduleAlarm()
-    }
-    val inexactAlarms = (application as StuddyApplication).inexactAlarms.apply {
-      rescheduleAlarms()
-    }
-    setContent {
-      StuddyTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ) {
-          val alarmRingtoneState = (application as StuddyApplication).alarmRingtoneState
-          HomeScreen(
-              exactAlarms,
-              inexactAlarms,
-              { openSettings() },
-              alarmRingtoneState.value != null,
-              {
-                alarmRingtoneState.value?.stop()
-                alarmRingtoneState.value = null
-              })
-        }
-      }
-    }
+fun playRingtone(context: Context): Ringtone {
+  var alarmUri: Uri? = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+  if (alarmUri == null) {
+    alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
   }
-
-  private fun openSettings() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-    }
-  }
+  val ringtone = RingtoneManager.getRingtone(context.applicationContext, alarmUri)
+  ringtone.play()
+  return ringtone
 }

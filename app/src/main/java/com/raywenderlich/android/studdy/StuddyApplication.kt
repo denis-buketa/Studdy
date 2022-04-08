@@ -35,6 +35,9 @@
 package com.raywenderlich.android.studdy
 
 import android.app.Application
+import android.media.Ringtone
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import com.raywenderlich.android.studdy.alarm.ExactAlarms
 import com.raywenderlich.android.studdy.alarm.ExactAlarmsImpl
 import com.raywenderlich.android.studdy.alarm.InexactAlarmsImpl
@@ -42,6 +45,8 @@ import com.raywenderlich.android.studdy.alarm.InexactAlarmsImpl
 const val SHARED_PREFS = "alarms"
 
 class StuddyApplication : Application() {
+
+  val alarmRingtoneState: MutableState<Ringtone?> = mutableStateOf(null)
 
   lateinit var exactAlarms: ExactAlarms
   lateinit var inexactAlarms: InexactAlarmsImpl

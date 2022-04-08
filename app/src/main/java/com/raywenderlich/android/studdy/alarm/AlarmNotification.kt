@@ -32,55 +32,48 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.studdy
+package com.raywenderlich.android.studdy.alarm
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
-import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Surface
-import androidx.compose.ui.Modifier
+import androidx.core.app.NotificationCompat
 import com.raywenderlich.android.R
-import com.raywenderlich.android.studdy.ui.home.HomeScreen
-import com.raywenderlich.android.studdy.ui.theme.StuddyTheme
+import com.raywenderlich.android.studdy.MainActivity
 
-class MainActivity : ComponentActivity() {
+fun showNotification(
+    context: Context,
+    channelId: String,
+    channelName: String,
+    notificationId: Int,
+    contentTitle: String
+) {
+  val intent = Intent(context, MainActivity::class.java)
+  val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    setTheme(R.style.Theme_Studdy)
-    super.onCreate(savedInstanceState)
-    val exactAlarms = (application as StuddyApplication).exactAlarms.apply {
-      rescheduleAlarm()
-    }
-    val inexactAlarms = (application as StuddyApplication).inexactAlarms.apply {
-      rescheduleAlarms()
-    }
-    setContent {
-      StuddyTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ) {
-          val alarmRingtoneState = (application as StuddyApplication).alarmRingtoneState
-          HomeScreen(
-              exactAlarms,
-              inexactAlarms,
-              { openSettings() },
-              alarmRingtoneState.value != null,
-              {
-                alarmRingtoneState.value?.stop()
-                alarmRingtoneState.value = null
-              })
-        }
-      }
-    }
+  val notificationBuilder = NotificationCompat.Builder(context, channelId)
+      .setSmallIcon(R.drawable.splash_icon)
+      .setContentTitle(contentTitle)
+      .setPriority(NotificationCompat.PRIORITY_HIGH)
+      .setCategory(NotificationCompat.CATEGORY_ALARM)
+      .setFullScreenIntent(pendingIntent, true)
+  val notification = notificationBuilder.build()
+  val notificationManager = context.getSystemService(NotificationManager::class.java)
+
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+      && notificationManager.getNotificationChannel(channelId) == null
+  ) {
+    notificationManager.createNotificationChannel(
+        NotificationChannel(
+            channelId,
+            channelName,
+            NotificationManager.IMPORTANCE_HIGH
+        )
+    )
   }
 
-  private fun openSettings() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-    }
-  }
+  notificationManager.notify(notificationId, notification)
 }

@@ -37,9 +37,11 @@
 package com.raywenderlich.android.studdy.ui.home
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,11 +61,13 @@ import com.raywenderlich.android.studdy.navigation.BottomNavItem
 fun HomeScreen(
     exactAlarms: ExactAlarms,
     inexactAlarms: InexactAlarms,
-    onSchedulingAlarmNotAllowed: () -> Unit
+    onSchedulingAlarmNotAllowed: () -> Unit,
+    showStopAlarmButton: Boolean,
+    onStopAlarmClicked: () -> Unit
 ) {
   val navController = rememberNavController()
   Scaffold(
-      topBar = { HomeScreenTopBar() },
+      topBar = { HomeScreenTopBar(showStopAlarmButton, onStopAlarmClicked) },
       bottomBar = { HomeScreenBottomNavigation(navController) }
   ) {
     NavHost(navController, startDestination = BottomNavItem.Study.screenRoute) {
@@ -78,12 +82,23 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeScreenTopBar() {
+private fun HomeScreenTopBar(
+    showStopAlarmButton: Boolean,
+    onStopAlarmClicked: () -> Unit
+) {
   TopAppBar(contentPadding = PaddingValues(start = 8.dp, end = 8.dp)) {
     Text(
         text = "Studdy App",
         fontSize = 24.sp
     )
+
+    if (showStopAlarmButton) {
+      Spacer(modifier = Modifier.weight(1f, true))
+      Button(
+          onClick = { onStopAlarmClicked.invoke() },
+          content = { Text("Stop") }
+      )
+    }
   }
 }
 
@@ -118,5 +133,5 @@ private fun HomeScreenBottomNavigation(navController: NavController) {
 @Preview
 @Composable
 fun HomeScreenPreview() {
-  HomeScreen(PreviewExactAlarms, PreviewInexactAlarms) {}
+  HomeScreen(PreviewExactAlarms, PreviewInexactAlarms, {}, true) {}
 }
