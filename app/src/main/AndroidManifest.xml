@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dev.denisbuketa.studdy">
+    package="com.raywenderlich.android">
 
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
   <application
-      android:name=".StuddyApplication"
+      android:name="com.raywenderlich.android.studdy.StuddyApplication"
       android:allowBackup="false"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
@@ -14,7 +14,7 @@
       android:supportsRtl="true"
       android:theme="@style/Theme.Studdy">
     <activity
-        android:name=".MainActivity"
+        android:name="com.raywenderlich.android.studdy.MainActivity"
         android:exported="true"
         android:screenOrientation="portrait"
         android:theme="@style/Theme.Studdy">
@@ -25,11 +25,11 @@
       </intent-filter>
     </activity>
 
-    <receiver android:name=".alarm.ExactAlarmBroadcastReceiver" />
-    <receiver android:name=".alarm.InexactAlarmBroadcastReceiver" />
+    <receiver android:name="com.raywenderlich.android.studdy.alarm.ExactAlarmBroadcastReceiver" />
+    <receiver android:name="com.raywenderlich.android.studdy.alarm.InexactAlarmBroadcastReceiver" />
 
     <receiver
-        android:name=".alarm.ResetAlarmsBroadcastReceiver"
+        android:name="com.raywenderlich.android.studdy.alarm.ResetAlarmsBroadcastReceiver"
         android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />

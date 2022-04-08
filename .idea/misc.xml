@@ -32,6 +32,9 @@
         <entry key="../../../../../layout/compose-model-1649438446061.xml" value="0.5848817567567568" />
         <entry key="../../../../../layout/compose-model-1649438502407.xml" value="0.5848817567567568" />
         <entry key="../../../../../layout/compose-model-1649440967907.xml" value="0.28631756756756754" />
+        <entry key="../../../../../layout/compose-model-1649443338951.xml" value="0.6551094890510949" />
+        <entry key="../../../../../layout/compose-model-1649443348031.xml" value="0.33240740740740743" />
+        <entry key="../../../../../layout/compose-model-1649443361545.xml" value="0.33240740740740743" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1795" />
         <entry key="app/src/main/res/drawable/ic_heart.xml" value="0.2225" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1795" />
@@ -40,7 +43,7 @@
     </option>
   </component>
   <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/app/src/main/java/dev/denisbuketa/studdy/ui/composables/TimeInput.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/raywenderlich/android/studdy/ui/composables/TimeInput.kt" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
