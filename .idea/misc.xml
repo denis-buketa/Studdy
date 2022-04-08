@@ -32,7 +32,10 @@
         <entry key="../../../../../layout/compose-model-1649438446061.xml" value="0.5848817567567568" />
         <entry key="../../../../../layout/compose-model-1649438502407.xml" value="0.5848817567567568" />
         <entry key="../../../../../layout/compose-model-1649440967907.xml" value="0.28631756756756754" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1795" />
         <entry key="app/src/main/res/drawable/ic_heart.xml" value="0.2225" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1795" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1795" />
       </map>
     </option>
   </component>

@@ -15,6 +15,7 @@ import dev.denisbuketa.studdy.ui.theme.StuddyTheme
 class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    setTheme(R.style.Theme_Studdy)
     super.onCreate(savedInstanceState)
     val exactAlarms = (application as StuddyApplication).exactAlarms.apply {
       rescheduleAlarm()
