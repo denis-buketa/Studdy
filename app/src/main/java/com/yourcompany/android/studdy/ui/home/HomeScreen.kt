@@ -36,13 +36,16 @@
 
 package com.yourcompany.android.studdy.ui.home
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,9 +70,9 @@ fun HomeScreen(
 ) {
   val navController = rememberNavController()
   Scaffold(
-      topBar = { HomeScreenTopBar(showStopAlarmButton, onStopAlarmClicked) },
+      topBar = { HomeScreenTopBar() },
       bottomBar = { HomeScreenBottomNavigation(navController) }
-  ) {
+  ) { scaffoldPadding ->
     NavHost(navController, startDestination = BottomNavItem.Study.screenRoute) {
       composable(BottomNavItem.Study.screenRoute) {
         StudyTab(exactAlarms, onSchedulingAlarmNotAllowed)
@@ -78,27 +81,44 @@ fun HomeScreen(
         RestTab(inexactAlarms)
       }
     }
+
+    if (showStopAlarmButton) {
+      Box(modifier = Modifier
+          .fillMaxSize()
+          .padding(scaffoldPadding)) {
+        Surface(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(48.dp),
+            shape = RoundedCornerShape(16.dp, 16.dp, 0.dp, 0.dp),
+            elevation = 8.dp,
+            color = MaterialTheme.colors.secondary
+        ) {
+          Box(modifier = Modifier
+              .fillMaxSize()
+              .clickable { onStopAlarmClicked.invoke() }) {
+            Text(
+                text = "Stop Alarm",
+                modifier = Modifier.align(Alignment.Center),
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.surface
+            )
+          }
+
+        }
+      }
+    }
   }
 }
 
 @Composable
-private fun HomeScreenTopBar(
-    showStopAlarmButton: Boolean,
-    onStopAlarmClicked: () -> Unit
-) {
+private fun HomeScreenTopBar() {
   TopAppBar(contentPadding = PaddingValues(start = 8.dp, end = 8.dp)) {
     Text(
         text = "Studdy App",
         fontSize = 24.sp
     )
-
-    if (showStopAlarmButton) {
-      Spacer(modifier = Modifier.weight(1f, true))
-      Button(
-          onClick = { onStopAlarmClicked.invoke() },
-          content = { Text("Stop") }
-      )
-    }
   }
 }
 
