@@ -41,6 +41,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -134,12 +135,14 @@ private fun InexactAlarmInput(
 
     Spacer(Modifier.weight(1F, true))
 
+    val focusManager = LocalFocusManager.current
     AlarmSetClearButtons(
         shouldShowClearButton = inexactAlarm.isSet(),
         onSetClicked = {
           if (hourInput.isValidHour() && minuteInput.isValidMinute()) {
             showInputInvalidMessage = false
             scheduleAlarm(inexactAlarms, hourInput.toInt(), minuteInput.toInt())
+            focusManager.clearFocus()
           } else {
             showInputInvalidMessage = true
           }
@@ -179,6 +182,7 @@ private fun WindowAlarmInput(
 
     Spacer(Modifier.weight(1F, true))
 
+    val focusManager = LocalFocusManager.current
     AlarmSetClearButtons(
         shouldShowClearButton = windowAlarm.isSet(),
         onSetClicked = {
@@ -192,6 +196,7 @@ private fun WindowAlarmInput(
                 minuteInput.toInt(),
                 windowInput.toInt()
             )
+            focusManager.clearFocus()
           } else {
             showInputInvalidMessage = true
           }
@@ -231,6 +236,7 @@ private fun RepeatingAlarmInput(
 
     Spacer(Modifier.weight(1F, true))
 
+    val focusManager = LocalFocusManager.current
     AlarmSetClearButtons(
         shouldShowClearButton = repeatingAlarm.isSet(),
         onSetClicked = {
@@ -242,6 +248,7 @@ private fun RepeatingAlarmInput(
                 minuteInput.toInt(),
                 intervalInput.toInt()
             )
+            focusManager.clearFocus()
           } else {
             showInputInvalidMessage = true
           }

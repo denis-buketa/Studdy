@@ -42,6 +42,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -89,6 +90,7 @@ fun StudyTab(
 
         Spacer(Modifier.weight(1F, true))
 
+        val focusManager = LocalFocusManager.current
         AlarmSetClearButtons(
             shouldShowClearButton = alarm.isSet(),
             onSetClicked = {
@@ -100,6 +102,7 @@ fun StudyTab(
                     minuteInput.toInt(),
                     onSchedulingExactAlarmsNotAllowed
                 )
+                focusManager.clearFocus()
               } else {
                 showInputInvalidMessage = true
               }
