@@ -30,7 +30,7 @@
     <receiver android:name="com.yourcompany.android.studdy.alarm.InexactAlarmBroadcastReceiver" />
 
     <receiver
-        android:name="com.yourcompany.android.studdy.alarm.ResetAlarmsBroadcastReceiver"
+        android:name="com.yourcompany.android.studdy.alarm.RescheduleAlarmsBroadcastReceiver"
         android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />

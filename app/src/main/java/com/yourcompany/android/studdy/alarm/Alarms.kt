@@ -42,8 +42,14 @@ import java.util.*
 
 private const val EXACT_ALARM_PREFERENCES_KEY = "exact_alarm"
 private const val INEXACT_ALARM_PREFERENCES_KEY = "inexact_alarm"
-private const val INEXACT_WINDOW_ALARM_PREFERENCES_KEY = "inexact_window_alarm"
-private const val INEXACT_REPEATING_ALARM_PREFERENCES_KEY = "inexact_repeating_alarm"
+
+private const val INEXACT_WINDOW_ALARM_TRIGGER_PREFERENCES_KEY = "inexact_window_alarm_trigger"
+private const val INEXACT_WINDOW_ALARM_WINDOW_PREFERENCES_KEY = "inexact_window_alarm_window"
+
+private const val INEXACT_REPEATING_ALARM_TRIGGER_PREFERENCES_KEY =
+    "inexact_repeating_alarm_trigger"
+private const val INEXACT_REPEATING_ALARM_INTERVAL_PREFERENCES_KEY =
+    "inexact_repeating_alarm_window"
 
 private const val ALARM_NOT_SET = -1L
 
@@ -74,52 +80,45 @@ fun SharedPreferences.clearInexactAlarm() {
 }
 
 fun SharedPreferences.getWindowAlarm(): WindowAlarm {
-  return getStringSet(INEXACT_WINDOW_ALARM_PREFERENCES_KEY, setOf()).let {
-    if (it.isNullOrEmpty()) {
-      WindowAlarm.NOT_SET
-    } else {
-      val triggerAtMillis = it.elementAt(0).toLong()
-      val windowLengthMillis = it.elementAt(1).toLong()
-      WindowAlarm(triggerAtMillis, windowLengthMillis)
-    }
-  }
+  val triggerAtMillis = getLong(INEXACT_WINDOW_ALARM_TRIGGER_PREFERENCES_KEY, ALARM_NOT_SET)
+  val windowMillis = getLong(INEXACT_WINDOW_ALARM_WINDOW_PREFERENCES_KEY, ALARM_NOT_SET)
+
+  return WindowAlarm(triggerAtMillis, windowMillis)
 }
 
 fun SharedPreferences.putWindowAlarm(windowAlarm: WindowAlarm) {
   edit()
-      .putStringSet(
-          INEXACT_WINDOW_ALARM_PREFERENCES_KEY,
-          setOf(windowAlarm.triggerAtMillis.toString(), windowAlarm.windowLengthMillis.toString()))
+      .putLong(INEXACT_WINDOW_ALARM_TRIGGER_PREFERENCES_KEY, windowAlarm.triggerAtMillis)
+      .putLong(INEXACT_WINDOW_ALARM_WINDOW_PREFERENCES_KEY, windowAlarm.windowLengthMillis)
       .apply()
 }
 
 fun SharedPreferences.clearWindowAlarm() {
-  edit().putStringSet(INEXACT_WINDOW_ALARM_PREFERENCES_KEY, setOf()).apply()
+  edit()
+      .putLong(INEXACT_WINDOW_ALARM_TRIGGER_PREFERENCES_KEY, ALARM_NOT_SET)
+      .putLong(INEXACT_WINDOW_ALARM_WINDOW_PREFERENCES_KEY, ALARM_NOT_SET)
+      .apply()
 }
 
 fun SharedPreferences.getRepeatingAlarm(): RepeatingAlarm {
-  return getStringSet(INEXACT_REPEATING_ALARM_PREFERENCES_KEY, setOf()).let {
-    if (it.isNullOrEmpty()) {
-      RepeatingAlarm.NOT_SET
-    } else {
-      val triggerAtMillis = it.elementAt(0).toLong()
-      val intervalMillis = it.elementAt(1).toLong()
-      RepeatingAlarm(triggerAtMillis, intervalMillis)
-    }
-  }
+  val triggerAtMillis = getLong(INEXACT_REPEATING_ALARM_TRIGGER_PREFERENCES_KEY, ALARM_NOT_SET)
+  val intervalMillis = getLong(INEXACT_REPEATING_ALARM_INTERVAL_PREFERENCES_KEY, ALARM_NOT_SET)
+
+  return RepeatingAlarm(triggerAtMillis, intervalMillis)
 }
 
 fun SharedPreferences.putRepeatingAlarm(repeatingAlarm: RepeatingAlarm) {
   edit()
-      .putStringSet(
-          INEXACT_REPEATING_ALARM_PREFERENCES_KEY,
-          setOf(repeatingAlarm.triggerAtMillis.toString(),
-              repeatingAlarm.intervalMillis.toString()))
+      .putLong(INEXACT_REPEATING_ALARM_TRIGGER_PREFERENCES_KEY, repeatingAlarm.triggerAtMillis)
+      .putLong(INEXACT_REPEATING_ALARM_INTERVAL_PREFERENCES_KEY, repeatingAlarm.intervalMillis)
       .apply()
 }
 
 fun SharedPreferences.clearRepeatingAlarm() {
-  edit().putStringSet(INEXACT_REPEATING_ALARM_PREFERENCES_KEY, setOf()).apply()
+  edit()
+      .putLong(INEXACT_REPEATING_ALARM_TRIGGER_PREFERENCES_KEY, ALARM_NOT_SET)
+      .putLong(INEXACT_REPEATING_ALARM_INTERVAL_PREFERENCES_KEY, ALARM_NOT_SET)
+      .apply()
 }
 
 fun convertToAlarmTimeMillis(hour: Int, minute: Int): Long {

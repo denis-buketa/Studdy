@@ -39,7 +39,7 @@ import android.content.Context
 import android.content.Intent
 import com.yourcompany.android.studdy.StuddyApplication
 
-class ResetAlarmsBroadcastReceiver : BroadcastReceiver() {
+class RescheduleAlarmsBroadcastReceiver : BroadcastReceiver() {
 
   override fun onReceive(context: Context, intent: Intent) {
     val action = intent.action

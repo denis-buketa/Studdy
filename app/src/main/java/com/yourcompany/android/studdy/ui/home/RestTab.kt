@@ -240,9 +240,9 @@ private fun RepeatingAlarmInput(
     AlarmSetClearButtons(
         shouldShowClearButton = repeatingAlarm.isSet(),
         onSetClicked = {
-          if (hourInput.isValidHour() && minuteInput.isValidHour() && intervalInput.isNotZero()) {
+          if (hourInput.isValidHour() && minuteInput.isValidMinute() && intervalInput.isNotZero()) {
             showInputInvalidMessage = false
-            setRepeatingAlarm(
+            scheduleRepeatingAlarm(
                 inexactAlarms,
                 hourInput.toInt(),
                 minuteInput.toInt(),
@@ -274,7 +274,7 @@ private fun scheduleWindowAlarm(
   inexactAlarms.scheduleWindowAlarm(WindowAlarm(alarmTimeMillis, windowLengthMillis))
 }
 
-private fun setRepeatingAlarm(
+private fun scheduleRepeatingAlarm(
     inexactAlarms: InexactAlarms,
     hour: Int,
     minute: Int,
