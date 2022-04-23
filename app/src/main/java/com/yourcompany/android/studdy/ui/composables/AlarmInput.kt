@@ -34,16 +34,18 @@
 
 package com.yourcompany.android.studdy.ui.composables
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -53,23 +55,31 @@ fun AlarmInput(
     minuteInput: String,
     onHourInputChanged: (String) -> Unit,
     onMinuteInputChanged: (String) -> Unit,
-    showInputInvalidMessage: Boolean
+    showInputInvalidMessage: Boolean,
+    is24HourFormat: Boolean = false,
+    isAm: Boolean = true,
+    onIsAmEvent: (Boolean) -> Unit = {}
 ) {
   Column {
     Row {
       TimeInput(
           inputState = hourInput,
           onInputChanged = { onHourInputChanged.invoke(it) },
-          placeHolderValue = "19"
+          placeHolderValue = "12"
       )
-      Spacer(Modifier.width(8.dp))
       Text(modifier = Modifier.align(alignment = Alignment.CenterVertically), text = ":")
-      Spacer(Modifier.width(8.dp))
       TimeInput(
           inputState = minuteInput,
           onInputChanged = { onMinuteInputChanged.invoke(it) },
           placeHolderValue = "00"
       )
+      if (is24HourFormat.not()) {
+        AmPmSelector(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            isAm = isAm,
+            onIsAmEvent = onIsAmEvent
+        )
+      }
     }
     if (showInputInvalidMessage) {
       Text(text = "Enter a valid time")
@@ -87,31 +97,37 @@ fun AlarmWithIntervalInput(
     onHourInputChanged: (String) -> Unit,
     onMinuteInputChanged: (String) -> Unit,
     onIntervalInputChanged: (String) -> Unit,
-    showInputInvalidMessage: Boolean
+    showInputInvalidMessage: Boolean,
+    is24HourFormat: Boolean = false,
+    isAm: Boolean = true,
+    onIsAmEvent: (Boolean) -> Unit = {}
 ) {
   Column {
     Row {
       TimeInput(
           inputState = hourInput,
           onInputChanged = { onHourInputChanged.invoke(it) },
-          placeHolderValue = "19"
+          placeHolderValue = "12"
       )
-      Spacer(Modifier.width(8.dp))
       Text(modifier = Modifier.align(alignment = Alignment.CenterVertically), text = ":")
-      Spacer(Modifier.width(8.dp))
       TimeInput(
           inputState = minuteInput,
           onInputChanged = { onMinuteInputChanged.invoke(it) },
           placeHolderValue = "00"
       )
-      Spacer(Modifier.width(8.dp))
       Text(modifier = Modifier.align(alignment = Alignment.CenterVertically), text = "+")
-      Spacer(Modifier.width(8.dp))
       TimeInput(
           inputState = intervalInput,
           onInputChanged = { onIntervalInputChanged.invoke(it) },
           placeHolderValue = "10"
       )
+      if (is24HourFormat.not()) {
+        AmPmSelector(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            isAm = isAm,
+            onIsAmEvent = onIsAmEvent
+        )
+      }
     }
     if (showInputInvalidMessage) {
       Text(text = "Enter a valid time")
@@ -168,6 +184,30 @@ fun AlarmSetClearButtons(
   }
 }
 
+@Composable
+fun AmPmSelector(
+    modifier: Modifier = Modifier,
+    isAm: Boolean,
+    onIsAmEvent: (Boolean) -> Unit
+) {
+  Row(modifier = modifier) {
+    Box(
+        modifier = Modifier
+            .clip(CircleShape)
+            .width(40.dp)
+            .height(40.dp)
+            .clickable { onIsAmEvent.invoke(isAm.not()) }
+    ) {
+      Text(
+          text = if (isAm) "AM" else "PM",
+          color = Color.Gray,
+          textAlign = TextAlign.Center,
+          modifier = Modifier.fillMaxWidth().align(Alignment.Center),
+      )
+    }
+  }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun AlarmInputPreview() {
@@ -176,7 +216,8 @@ fun AlarmInputPreview() {
       minuteInput = "",
       onHourInputChanged = {},
       onMinuteInputChanged = {},
-      true
+      true,
+      is24HourFormat = true
   )
 }
 
@@ -197,11 +238,20 @@ fun AlarmWindowInputPreview() {
 @Preview
 @Composable
 fun TimeInputPreview() {
-  TimeInput("19", {}, "10")
+  TimeInput("12", {}, "10")
 }
 
 @Preview(showBackground = true)
 @Composable
 fun AlarmSetClearButtonsPreview() {
   AlarmSetClearButtons(true, {}, {})
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewAmPmSelector() {
+  AmPmSelector(
+      isAm = true,
+      onIsAmEvent = {}
+  )
 }

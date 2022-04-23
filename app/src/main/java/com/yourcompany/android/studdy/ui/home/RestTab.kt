@@ -123,6 +123,8 @@ private fun InexactAlarmInput(
   var hourInput by remember { mutableStateOf("") }
   var minuteInput by remember { mutableStateOf("") }
   var showInputInvalidMessage by remember { mutableStateOf(false) }
+  var isAm by remember { mutableStateOf(true) }
+  val is24HourFormat = TimeFormat.is24HourFormat
 
   Row(modifier = Modifier.padding(top = 16.dp)) {
     AlarmInput(
@@ -130,7 +132,10 @@ private fun InexactAlarmInput(
         minuteInput = minuteInput,
         onHourInputChanged = { hourInput = it },
         onMinuteInputChanged = { minuteInput = it },
-        showInputInvalidMessage = showInputInvalidMessage
+        showInputInvalidMessage = showInputInvalidMessage,
+        is24HourFormat = is24HourFormat,
+        isAm = isAm,
+        onIsAmEvent = { isAmValue -> isAm = isAmValue }
     )
 
     Spacer(Modifier.weight(1F, true))
@@ -139,9 +144,15 @@ private fun InexactAlarmInput(
     AlarmSetClearButtons(
         shouldShowClearButton = inexactAlarm.isSet(),
         onSetClicked = {
-          if (hourInput.isValidHour() && minuteInput.isValidMinute()) {
+          if (hourInput.isValidHour(is24HourFormat) && minuteInput.isValidMinute()) {
             showInputInvalidMessage = false
-            scheduleAlarm(inexactAlarms, hourInput.toInt(), minuteInput.toInt())
+
+            val hour: Int = if (is24HourFormat) {
+              hourInput.toInt()
+            } else {
+              hourInput.toInt().toHour24Format(isAm)
+            }
+            scheduleAlarm(inexactAlarms, hour, minuteInput.toInt())
             focusManager.clearFocus()
           } else {
             showInputInvalidMessage = true
@@ -169,6 +180,9 @@ private fun WindowAlarmInput(
   var minuteInput by remember { mutableStateOf("") }
   var windowInput by remember { mutableStateOf("") }
   var showInputInvalidMessage by remember { mutableStateOf(false) }
+  var isAm by remember { mutableStateOf(true) }
+  val is24HourFormat = TimeFormat.is24HourFormat
+
   Row(modifier = Modifier.padding(top = 16.dp)) {
     AlarmWithIntervalInput(
         hourInput = hourInput,
@@ -177,7 +191,10 @@ private fun WindowAlarmInput(
         onHourInputChanged = { hourInput = it },
         onMinuteInputChanged = { minuteInput = it },
         onIntervalInputChanged = { windowInput = it },
-        showInputInvalidMessage = showInputInvalidMessage
+        showInputInvalidMessage = showInputInvalidMessage,
+        is24HourFormat = is24HourFormat,
+        isAm = isAm,
+        onIsAmEvent = { isAmValue -> isAm = isAmValue }
     )
 
     Spacer(Modifier.weight(1F, true))
@@ -186,13 +203,19 @@ private fun WindowAlarmInput(
     AlarmSetClearButtons(
         shouldShowClearButton = windowAlarm.isSet(),
         onSetClicked = {
-          if (hourInput.isValidHour()
+          if (hourInput.isValidHour(is24HourFormat)
               && minuteInput.isValidMinute()
               && windowInput.isValidWindowLength()) {
             showInputInvalidMessage = false
+
+            val hour: Int = if (is24HourFormat) {
+              hourInput.toInt()
+            } else {
+              hourInput.toInt().toHour24Format(isAm)
+            }
             scheduleWindowAlarm(
                 inexactAlarms,
-                hourInput.toInt(),
+                hour,
                 minuteInput.toInt(),
                 windowInput.toInt()
             )
@@ -223,6 +246,9 @@ private fun RepeatingAlarmInput(
   var minuteInput by remember { mutableStateOf("") }
   var intervalInput by remember { mutableStateOf("") }
   var showInputInvalidMessage by remember { mutableStateOf(false) }
+  var isAm by remember { mutableStateOf(true) }
+  val is24HourFormat = TimeFormat.is24HourFormat
+
   Row(modifier = Modifier.padding(top = 16.dp)) {
     AlarmWithIntervalInput(
         hourInput = hourInput,
@@ -231,7 +257,10 @@ private fun RepeatingAlarmInput(
         onHourInputChanged = { hourInput = it },
         onMinuteInputChanged = { minuteInput = it },
         onIntervalInputChanged = { intervalInput = it },
-        showInputInvalidMessage = showInputInvalidMessage
+        showInputInvalidMessage = showInputInvalidMessage,
+        is24HourFormat = is24HourFormat,
+        isAm = isAm,
+        onIsAmEvent = { isAmValue -> isAm = isAmValue }
     )
 
     Spacer(Modifier.weight(1F, true))
@@ -240,11 +269,20 @@ private fun RepeatingAlarmInput(
     AlarmSetClearButtons(
         shouldShowClearButton = repeatingAlarm.isSet(),
         onSetClicked = {
-          if (hourInput.isValidHour() && minuteInput.isValidMinute() && intervalInput.isNotZero()) {
+          if (hourInput.isValidHour(is24HourFormat)
+              && minuteInput.isValidMinute()
+              && intervalInput.isNotZero()
+          ) {
             showInputInvalidMessage = false
+
+            val hour: Int = if (is24HourFormat) {
+              hourInput.toInt()
+            } else {
+              hourInput.toInt().toHour24Format(isAm)
+            }
             scheduleRepeatingAlarm(
                 inexactAlarms,
-                hourInput.toInt(),
+                hour,
                 minuteInput.toInt(),
                 intervalInput.toInt()
             )

@@ -46,13 +46,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.yourcompany.android.studdy.*
 import com.yourcompany.android.studdy.alarm.ExactAlarm
 import com.yourcompany.android.studdy.alarm.ExactAlarms
 import com.yourcompany.android.studdy.alarm.PreviewExactAlarms
 import com.yourcompany.android.studdy.alarm.convertToAlarmTimeMillis
-import com.yourcompany.android.studdy.isValidHour
-import com.yourcompany.android.studdy.isValidMinute
-import com.yourcompany.android.studdy.toUserFriendlyText
 import com.yourcompany.android.studdy.ui.composables.AlarmInput
 import com.yourcompany.android.studdy.ui.composables.AlarmSetClearButtons
 
@@ -80,12 +78,17 @@ fun StudyTab(
         var hourInput by remember { mutableStateOf("") }
         var minuteInput by remember { mutableStateOf("") }
         var showInputInvalidMessage by remember { mutableStateOf(false) }
+        var isAm by remember { mutableStateOf(true) }
+        val is24HourFormat = TimeFormat.is24HourFormat
         AlarmInput(
             hourInput = hourInput,
             minuteInput = minuteInput,
             onHourInputChanged = { hourInput = it },
             onMinuteInputChanged = { minuteInput = it },
-            showInputInvalidMessage = showInputInvalidMessage
+            showInputInvalidMessage = showInputInvalidMessage,
+            is24HourFormat = is24HourFormat,
+            isAm = isAm,
+            onIsAmEvent = { isAmValue -> isAm = isAmValue }
         )
 
         Spacer(Modifier.weight(1F, true))
@@ -94,11 +97,17 @@ fun StudyTab(
         AlarmSetClearButtons(
             shouldShowClearButton = alarm.isSet(),
             onSetClicked = {
-              if (hourInput.isValidHour() && minuteInput.isValidMinute()) {
+              if (hourInput.isValidHour(is24HourFormat) && minuteInput.isValidMinute()) {
                 showInputInvalidMessage = false
+
+                val hour: Int = if (is24HourFormat) {
+                  hourInput.toInt()
+                } else {
+                  hourInput.toInt().toHour24Format(isAm)
+                }
                 scheduleAlarm(
                     exactAlarms,
-                    hourInput.toInt(),
+                    hour,
                     minuteInput.toInt(),
                     onSchedulingExactAlarmsNotAllowed
                 )

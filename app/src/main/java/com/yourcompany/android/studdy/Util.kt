@@ -34,6 +34,9 @@
 
 package com.yourcompany.android.studdy
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import java.text.DecimalFormat
 import java.util.*
 
@@ -41,8 +44,12 @@ import java.util.*
  * Contains useful util methods that makes the code more readable.
  */
 
-fun String.isValidHour(): Boolean = this.toIntOrNull().let {
-  it != null && it >= 0 && it <= 23
+fun String.isValidHour(is24HourFormat: Boolean = true): Boolean = this.toIntOrNull().let {
+  if (is24HourFormat) {
+    it != null && it >= 0 && it <= 23
+  } else {
+    it != null && it > 0 && it <= 12
+  }
 }
 
 fun String.isValidMinute(): Boolean = this.toIntOrNull().let {
@@ -93,3 +100,24 @@ fun toUserFriendlyText(millis: Long, intervalMillis: Long): String {
 }
 
 fun currentTimeMillis(): Long = Calendar.getInstance().timeInMillis
+
+fun Int.toHour24Format(isAm: Boolean): Int {
+  return if (isAm) {
+    if (this == 12) {
+      0
+    } else {
+      this
+    }
+  } else {
+    if (this == 12) {
+      12
+    } else {
+      this + 12
+    }
+  }
+}
+
+object TimeFormat {
+
+  var is24HourFormat by mutableStateOf(false)
+}
