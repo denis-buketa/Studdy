@@ -132,7 +132,6 @@ private fun HomeScreenBottomNavigation(navController: NavController) {
       elevation = 4.dp
   ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
 
     navItems.forEach { navItem ->
       BottomNavigationItem(
@@ -143,8 +142,13 @@ private fun HomeScreenBottomNavigation(navController: NavController) {
             )
           },
           label = { Text(text = navItem.title, fontSize = 8.sp) },
-          selected = currentRoute == navItem.screenRoute,
-          onClick = { navController.navigate(navItem.screenRoute) }
+          selected = navBackStackEntry?.destination?.route == navItem.screenRoute,
+          onClick = {
+            navController.apply {
+              popBackStack()
+              navigate(navItem.screenRoute)
+            }
+          }
       )
     }
   }
