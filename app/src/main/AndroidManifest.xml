@@ -28,6 +28,7 @@
 
     <receiver android:name="com.yourcompany.android.studdy.alarm.ExactAlarmBroadcastReceiver" />
     <receiver android:name="com.yourcompany.android.studdy.alarm.InexactAlarmBroadcastReceiver" />
+    <receiver android:name="com.yourcompany.android.studdy.alarm.AlarmNotificationDismissedBroadcastReceiver" />
 
     <receiver
         android:name="com.yourcompany.android.studdy.alarm.RescheduleAlarmsBroadcastReceiver"
