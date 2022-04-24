@@ -34,10 +34,7 @@
 
 package com.yourcompany.android.studdy
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import android.text.format.DateFormat
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -83,9 +80,7 @@ class MainActivity : ComponentActivity() {
   }
 
   private fun openSettings() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-    }
+    // TODO Add logic for opening alarm settings
   }
 
   override fun onResume() {

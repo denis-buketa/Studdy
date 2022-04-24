@@ -3,8 +3,9 @@
     package="com.yourcompany.android">
 
   <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+  <!-- TODO Register permissions to receive booting event  -->
+  <!-- TODO Register permissions for scheduling exact alarms  -->
 
   <application
       android:name="com.yourcompany.android.studdy.StuddyApplication"
@@ -26,17 +27,11 @@
       </intent-filter>
     </activity>
 
-    <receiver android:name="com.yourcompany.android.studdy.alarm.ExactAlarmBroadcastReceiver" />
-    <receiver android:name="com.yourcompany.android.studdy.alarm.InexactAlarmBroadcastReceiver" />
-    <receiver android:name="com.yourcompany.android.studdy.alarm.AlarmNotificationDismissedBroadcastReceiver" />
+    <!-- TODO Register exact alarm broadcast receiver   -->
+    <!-- TODO Register inexact alarm broadcast receiver   -->
+    <!-- TODO Register broadcast receiver for boot completed event for rescheduling alarms -->
 
-    <receiver
-        android:name="com.yourcompany.android.studdy.alarm.RescheduleAlarmsBroadcastReceiver"
-        android:exported="true">
-      <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED" />
-      </intent-filter>
-    </receiver>
+    <receiver android:name="com.yourcompany.android.studdy.alarm.AlarmNotificationDismissedBroadcastReceiver" />
 
   </application>
 

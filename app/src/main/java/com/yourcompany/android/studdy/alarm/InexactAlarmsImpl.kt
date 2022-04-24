@@ -34,10 +34,7 @@
 
 package com.yourcompany.android.studdy.alarm
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -53,7 +50,8 @@ class InexactAlarmsImpl(
     private val sharedPreferences: SharedPreferences
 ) : InexactAlarms {
 
-  private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+  // TODO Initialize AlarmManager
+
   private var inexactAlarmState = mutableStateOf(ExactAlarm.NOT_SET)
   private var windowAlarmState = mutableStateOf(WindowAlarm.NOT_SET)
   private var repeatingAlarmState = mutableStateOf(RepeatingAlarm.NOT_SET)
@@ -88,66 +86,48 @@ class InexactAlarmsImpl(
   }
 
   override fun scheduleInexactAlarm(inexactAlarm: ExactAlarm) {
-    val pendingIntent = createInexactAlarmIntent(INEXACT_ALARM_REQUEST_CODE)
-    alarmManager.set(AlarmManager.RTC_WAKEUP, inexactAlarm.triggerAtMillis, pendingIntent)
+    // TODO Add logic for scheduling inexact alarm
+
     sharedPreferences.putInexactAlarm(inexactAlarm)
     inexactAlarmState.value = inexactAlarm
   }
 
   override fun clearInexactAlarm() {
-    val pendingIntent = createInexactAlarmIntent(INEXACT_ALARM_REQUEST_CODE)
-    alarmManager.cancel(pendingIntent)
+    // TODO Add logic for clearing inexact alarm
+
     sharedPreferences.clearInexactAlarm()
     inexactAlarmState.value = ExactAlarm.NOT_SET
   }
 
   override fun scheduleWindowAlarm(windowAlarm: WindowAlarm) {
-    val pendingIntent = createInexactAlarmIntent(INEXACT_ALARM_WINDOW_REQUEST_CODE)
-    alarmManager.setWindow(
-        AlarmManager.RTC_WAKEUP,
-        windowAlarm.triggerAtMillis,
-        windowAlarm.windowLengthMillis,
-        pendingIntent
-    )
+    // TODO Add logic for scheduling window alarm
+
     sharedPreferences.putWindowAlarm(windowAlarm)
     windowAlarmState.value = windowAlarm
   }
 
   override fun clearWindowAlarm() {
-    val pendingIntent = createInexactAlarmIntent(INEXACT_ALARM_WINDOW_REQUEST_CODE)
-    alarmManager.cancel(pendingIntent)
+    // TODO Add logic for clearing window alarm
+
     sharedPreferences.clearWindowAlarm()
     windowAlarmState.value = WindowAlarm.NOT_SET
   }
 
   override fun scheduleRepeatingAlarm(repeatingAlarm: RepeatingAlarm) {
-    val pendingIntent = createInexactAlarmIntent(INEXACT_REPEATING_ALARM_REQUEST_CODE)
-    alarmManager.setInexactRepeating(
-        AlarmManager.RTC_WAKEUP,
-        repeatingAlarm.triggerAtMillis,
-        repeatingAlarm.intervalMillis,
-        pendingIntent
-    )
+    // TODO Add logic for scheduling window alarm
+
     sharedPreferences.putRepeatingAlarm(repeatingAlarm)
     repeatingAlarmState.value = repeatingAlarm
   }
 
   override fun clearRepeatingAlarm() {
-    val pendingIntent = createInexactAlarmIntent(INEXACT_REPEATING_ALARM_REQUEST_CODE)
-    alarmManager.cancel(pendingIntent)
+    // TODO Add logic for clearing repeating alarm
+
     sharedPreferences.clearRepeatingAlarm()
     repeatingAlarmState.value = RepeatingAlarm.NOT_SET
   }
 
-  private fun createInexactAlarmIntent(alarmRequestCode: Int): PendingIntent {
-    val intent = Intent(context, InexactAlarmBroadcastReceiver::class.java).apply {
-      putExtra(ALARM_REQUEST_CODE_EXTRA, alarmRequestCode)
-    }
-    return PendingIntent.getBroadcast(
-        context,
-        alarmRequestCode,
-        intent,
-        PendingIntent.FLAG_IMMUTABLE
-    )
+  private fun createInexactAlarmIntent(alarmRequestCode: Int) {
+    // TODO Add logic for creating alarm intent
   }
 }
