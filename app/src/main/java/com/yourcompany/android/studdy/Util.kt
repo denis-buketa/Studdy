@@ -77,26 +77,55 @@ fun Long.plusOneDay(): Long = this + 24 * 60 * 60 * 1000
 
 fun Int.toMillis(): Long = this * 60 * 1000L
 
-fun toUserFriendlyText(millis: Long): String {
+fun toUserFriendlyText(millis: Long, is24HourFormat: Boolean = true): String {
   val decimalFormat = DecimalFormat("00")
   val calendar = Calendar.getInstance()
   calendar.timeInMillis = millis
-  val hour = calendar.get(Calendar.HOUR_OF_DAY)
-  val minute = calendar.get(Calendar.MINUTE)
-  return "${decimalFormat.format(hour)}:${decimalFormat.format(minute)}"
+
+  if (is24HourFormat) {
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
+    return "${decimalFormat.format(hour)}:${decimalFormat.format(minute)}"
+  } else {
+    val amPm = calendar.get(Calendar.AM_PM)
+    val calendarHour = calendar.get(Calendar.HOUR)
+    val hour: Int = if (calendarHour == 0) {
+      12
+    } else {
+      calendarHour
+    }
+    val minute = calendar.get(Calendar.MINUTE)
+    val amPmString = if (amPm == Calendar.AM) "AM" else "PM"
+    return "${decimalFormat.format(hour)}:${decimalFormat.format(minute)} ($amPmString)"
+  }
 }
 
-fun toUserFriendlyText(millis: Long, intervalMillis: Long): String {
+fun toUserFriendlyText(millis: Long, intervalMillis: Long, is24HourFormat: Boolean = true): String {
   val decimalFormat = DecimalFormat("00")
   val calendar = Calendar.getInstance()
   calendar.timeInMillis = millis
-  val hour = calendar.get(Calendar.HOUR_OF_DAY)
-  val minute = calendar.get(Calendar.MINUTE)
 
   val intervalMinute: Int = (intervalMillis / 1000 / 60).toInt()
 
-  return "${decimalFormat.format(hour)}:${decimalFormat.format(minute)} " +
-      "(${decimalFormat.format(intervalMinute)})"
+  if (is24HourFormat) {
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
+
+    return "${decimalFormat.format(hour)}:${decimalFormat.format(minute)} " +
+        "(${decimalFormat.format(intervalMinute)})"
+  } else {
+    val amPm = calendar.get(Calendar.AM_PM)
+    val calendarHour = calendar.get(Calendar.HOUR)
+    val hour: Int = if (calendarHour == 0) {
+      12
+    } else {
+      calendarHour
+    }
+    val minute = calendar.get(Calendar.MINUTE)
+    val amPmString = if (amPm == Calendar.AM) "AM" else "PM"
+    return "${decimalFormat.format(hour)}:${decimalFormat.format(minute)} " +
+        "(${decimalFormat.format(intervalMinute)}) ($amPmString)"
+  }
 }
 
 fun currentTimeMillis(): Long = Calendar.getInstance().timeInMillis

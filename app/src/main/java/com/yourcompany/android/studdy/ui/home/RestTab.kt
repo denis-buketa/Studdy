@@ -57,6 +57,8 @@ fun RestTab(inexactAlarms: InexactAlarms) {
   val inexactAlarm by remember { inexactAlarms.getInexactAlarmState() }
   val windowAlarm by remember { inexactAlarms.getWindowAlarmState() }
   val repeatingAlarm by remember { inexactAlarms.getRepeatingAlarmState() }
+  val is24HourFormat = TimeFormat.is24HourFormat
+
 
   Box(
       modifier = Modifier.fillMaxSize()
@@ -77,7 +79,9 @@ fun RestTab(inexactAlarms: InexactAlarms) {
       ) {
         if (inexactAlarm.isSet()) {
           Text(
-              text = "Inexact alarm set: ${toUserFriendlyText(inexactAlarm.triggerAtMillis)}",
+              text = "Inexact alarm set: ${
+                toUserFriendlyText(inexactAlarm.triggerAtMillis, is24HourFormat)
+              }",
               modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
           )
         }

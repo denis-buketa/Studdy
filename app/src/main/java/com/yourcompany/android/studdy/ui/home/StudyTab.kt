@@ -62,7 +62,7 @@ fun StudyTab(
 ) {
 
   val alarm by remember { exactAlarms.getExactAlarmState() }
-
+  val is24HourFormat = TimeFormat.is24HourFormat
   Box(modifier = Modifier.fillMaxSize()) {
     Column(modifier = Modifier.padding(horizontal = 8.dp)) {
       Text(
@@ -79,7 +79,6 @@ fun StudyTab(
         var minuteInput by remember { mutableStateOf("") }
         var showInputInvalidMessage by remember { mutableStateOf(false) }
         var isAm by remember { mutableStateOf(true) }
-        val is24HourFormat = TimeFormat.is24HourFormat
         AlarmInput(
             hourInput = hourInput,
             minuteInput = minuteInput,
@@ -124,7 +123,7 @@ fun StudyTab(
 
     if (alarm.isSet()) {
       Text(
-          text = "Alarm set: ${toUserFriendlyText(alarm.triggerAtMillis)}",
+          text = "Alarm set: ${toUserFriendlyText(alarm.triggerAtMillis, is24HourFormat)}",
           modifier = Modifier.align(Alignment.Center)
       )
     }
