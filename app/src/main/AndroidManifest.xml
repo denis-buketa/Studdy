@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.raywenderlich.android">
+    package="com.yourcompany.android">
 
   <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
-  <!-- TODO Register permissions to receive booting event  -->
+  <!-- TODO (22) Declare permission to allow the app to receive boot event -->
 
-  <!-- TODO Register permissions for scheduling exact alarms  -->
+  <!-- TODO (2) Declare permission to schedule exact alarms -->
 
   <application
-      android:name="com.raywenderlich.android.studdy.StuddyApplication"
+      android:name="com.yourcompany.android.studdy.StuddyApplication"
       android:allowBackup="false"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
       android:roundIcon="@mipmap/ic_launcher_round"
-      android:supportsRtl="true"
-      android:theme="@style/Theme.Studdy">
+      android:supportsRtl="true">
     <activity
-        android:name="com.raywenderlich.android.studdy.MainActivity"
+        android:name="com.yourcompany.android.studdy.MainActivity"
         android:exported="true"
-        android:screenOrientation="portrait"
         android:launchMode="singleTask"
-        android:theme="@style/Theme.Studdy">
+        android:screenOrientation="portrait"
+        android:theme="@style/SplashTheme">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
 
@@ -29,11 +28,13 @@
       </intent-filter>
     </activity>
 
-    <!-- TODO Register exact alarm broadcast receiver   -->
+    <!-- TODO (6) Declare BroadcastReceiver for an exact alarm -->
 
-    <!-- TODO Register inexact alarm broadcast receiver   -->
+    <!-- TODO (14) Declare BroadcastReceiver for an inexact alarm -->
 
-    <!-- TODO Register broadcast receiver for boot completed event for rescheduling alarms -->
+    <!-- TODO (24) Declare BroadcastReceiver for boot event -->
+
+    <receiver android:name="com.yourcompany.android.studdy.alarm.AlarmNotificationDismissedBroadcastReceiver" />
 
   </application>
 
