@@ -34,12 +34,6 @@
 
 package com.yourcompany.android.studdy.alarm
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.util.Log
-import com.yourcompany.android.studdy.StuddyApplication
-
 private const val NOTIFICATION_ID = 1002
 private const val NOTIFICATION_CHANNEL_ID = "rest_alarm"
 private const val NOTIFICATION_CHANNEL_NAME = "Rest Alarms"
