@@ -38,6 +38,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import android.app.AlarmManager
+import android.os.Build
+import android.app.PendingIntent
+import android.content.Intent
 
 const val EXACT_ALARM_INTENT_REQUEST_CODE = 1001
 
@@ -46,7 +50,7 @@ class ExactAlarmsImpl(
     private val sharedPreferences: SharedPreferences
 ) : ExactAlarms {
 
-  // TODO (1) Require an AlarmManager Instance
+  private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
   private var exactAlarmState = mutableStateOf(ExactAlarm.NOT_SET)
 
@@ -68,27 +72,44 @@ class ExactAlarmsImpl(
   }
 
   override fun clearExactAlarm() {
-    // TODO (11) Cancel an exact alarm, clear preferences and update state
+    val pendingIntent = createExactAlarmIntent()
+    alarmManager.cancel(pendingIntent)
+
+    sharedPreferences.clearExactAlarm()
+    exactAlarmState.value = ExactAlarm.NOT_SET
   }
 
   override fun canScheduleExactAlarms(): Boolean {
-    // TODO (3) Check if app has a permission to schedule an exact alarm
-    return true
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      alarmManager.canScheduleExactAlarms()
+    } else {
+      true
+    }
   }
 
   private fun setExactAlarmSetExact(triggerAtMillis: Long) {
-    // TODO (9) Schedule an exact alarm using setExact()
+    val pendingIntent = createExactAlarmIntent()
+    alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
   }
 
   private fun setExactAlarmSetExactAndAllowWhileIdle(triggerAtMillis: Long) {
-    // TODO (10) Schedule an exact alarm using setExactAndAllowWhileIdle()
+    val pendingIntent = createExactAlarmIntent()
+    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
   }
 
   private fun setExactAlarmSetAlarmClock(triggerAtMillis: Long) {
-    // TODO (8) Schedule an exact alarm using setAlarmClock()
+    val pendingIntent = createExactAlarmIntent()
+    val alarmClockInfo = AlarmManager.AlarmClockInfo(triggerAtMillis, pendingIntent)
+    alarmManager.setAlarmClock(alarmClockInfo, pendingIntent)
   }
 
-  private fun createExactAlarmIntent() {
-    // TODO (7) Create PendingIntent for an exact alarm
+  private fun createExactAlarmIntent(): PendingIntent {
+    val intent = Intent(context, ExactAlarmBroadcastReceiver::class.java)
+    return PendingIntent.getBroadcast(
+        context,
+        EXACT_ALARM_INTENT_REQUEST_CODE,
+        intent,
+        PendingIntent.FLAG_IMMUTABLE
+    )
   }
 }

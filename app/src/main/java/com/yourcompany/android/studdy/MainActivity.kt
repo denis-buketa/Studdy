@@ -44,6 +44,9 @@ import androidx.compose.ui.Modifier
 import com.yourcompany.android.R
 import com.yourcompany.android.studdy.ui.home.HomeScreen
 import com.yourcompany.android.studdy.ui.theme.StuddyTheme
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 
 /**
  * Main activity that holds the UI and servers as a starting activity.
@@ -80,7 +83,9 @@ class MainActivity : ComponentActivity() {
   }
 
   private fun openSettings() {
-      // TODO (4) Open Alarms & Reminders Screen
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+    }
   }
 
   override fun onResume() {
